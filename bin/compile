@@ -6,6 +6,8 @@ set -ueo pipefail
 
 env_dir=$3
 
+source /dev/stdin <<< "$(curl -s --retry 3 https://lang-common.s3.amazonaws.com/buildpack-stdlib/v4/stdlib.sh)"
+
 if [ -d "$env_dir" ]; then
   export "PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN=$(cat $env_dir/PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN)"
 fi
