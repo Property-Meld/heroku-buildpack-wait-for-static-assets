@@ -4,6 +4,7 @@
 # fail fast
 set -ueo pipefail
 
+build_dir=$1
 env_dir=$3
 
 source /dev/stdin <<< "$(curl -s --retry 3 https://lang-common.s3.amazonaws.com/buildpack-stdlib/v4/stdlib.sh)"
@@ -12,9 +13,17 @@ if [ -d "$env_dir" ]; then
   export "PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN=$(cat $env_dir/PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN)"
 fi
 
+rm $build_dir/rev-manifest.json
+rm $build_dir/version.json
+
 puts_step "Waiting for static assets to be deployed"
 
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
+while [[ "$(curl -s -o $build_dir -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
+do
+  sleep 10;
+done
+
+while [[ "$(curl -s -o $build_dir -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/version.json)" != "200" ]];
 do
   sleep 10;
 done
