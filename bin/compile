@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+# fail fast
+set -ueo pipefail
+
+env_dir=$3
+
+if [ -d "$env_dir" ]; then
+  export "PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN=$(cat $env_dir/PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN)"
+fi
+
+puts_step "Waiting for static assets to be deployed"
+
+while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
+do
+  sleep 10;
+done
+
+puts_step "Static assets are now available"
+
