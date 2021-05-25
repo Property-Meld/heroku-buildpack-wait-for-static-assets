@@ -18,15 +18,16 @@ rm $build_dir/version.json
 
 puts_step "Waiting for static assets to be deployed"
 
-while [[ "$(curl -s -o $build_dir/rev-manifest.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
-do
-  sleep 10;
-done
+# FIXME - needs to be reenabled
+# while [[ "$(curl -s -o $build_dir/rev-manifest.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
+# do
+#   sleep 10;
+# done
 
-while [[ "$(curl -s -o $build_dir/version.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/version.json)" != "200" ]];
-do
-  sleep 10;
-done
+# while [[ "$(curl -s -o $build_dir/version.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/version.json)" != "200" ]];
+# do
+#   sleep 10;
+# done
 
 puts_step "Static assets are now available"
 
