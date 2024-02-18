@@ -20,11 +20,13 @@ puts_step "Waiting for static assets to be deployed"
 
 while [[ "$(curl -s -o $build_dir/rev-manifest.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/rev-manifest.json)" != "200" ]];
 do
+  echo "Trying to fetch: https://${PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN}/static/${SOURCE_VERSION}/rev-manifest.json"
   sleep 10;
 done
 
 while [[ "$(curl -s -o $build_dir/version.json -w ''%{http_code}'' https://$PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN/static/$SOURCE_VERSION/version.json)" != "200" ]];
 do
+  echo "Trying to fetch https://${PM_APP_AWS_DJANGO_CLOUDFRONT_DOMAIN}/static/${SOURCE_VERSION}/version.json":
   sleep 10;
 done
 
